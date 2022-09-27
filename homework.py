@@ -5,9 +5,11 @@ import requests
 import telegram
 import time as time_
 
+
 from dotenv import load_dotenv
 from http import HTTPStatus
 from sys import stdout
+
 
 from exception import (
     VariableNotValidException, GetEndpointException,
