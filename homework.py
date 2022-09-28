@@ -21,6 +21,9 @@ from settings import (
 )
 
 
+logging.StreamHandler(sys.stdout)
+
+
 def send_message(bot: telegram.Bot, message: str) -> None:
     """Функиция отправки сообщения о статусе работу в телеграм."""
     try:
