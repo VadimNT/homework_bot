@@ -11,8 +11,8 @@ from http import HTTPStatus
 
 from exception import (
     GetEndpointException, HTTPStatusCodeIncorrectException,
-    KeyDictResponseException, ResponseNotListException,
-    UnionClassByTelegramBotException,
+    KeyDictResponseException, MessageTelegramBotNotSendException,
+    ResponseNotListException, UnionClassByTelegramBotException,
 )
 from utilites import logger
 from settings import (
@@ -30,7 +30,9 @@ def send_message(bot: telegram.Bot, message: str) -> None:
         logger.info("Начата отправка сообщения в Telegram")
         bot.send_message(TELEGRAM_CHAT_ID, message)
     except Exception as error:
-        logger.error(f"Ошибка отправки сообщения: {error}")
+        raise MessageTelegramBotNotSendException(
+            f"Ошибка отправки сообщения: {error}"
+        )
     else:
         logger.info(f"Сообщение отправлено: {message}")
 
@@ -112,6 +114,8 @@ def main() -> None:
                 logger.debug('Отсутствие в ответе API новых статусов')
             current_timestamp = int(time_.time())
             time_.sleep(RETRY_TIME)
+        except MessageTelegramBotNotSendException as error:
+            logger.error(str(error))
         except UnionClassByTelegramBotException as error:
             send_message(bot, str(error))
             logger.error(str(error))

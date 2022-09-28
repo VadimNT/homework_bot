@@ -1,3 +1,10 @@
+class MessageTelegramBotNotSendException(Exception):
+    """
+    Исключение, возникающее при ошибке отправки сообщения телеграмм-ботом
+    """
+    pass
+
+
 class UnionClassByTelegramBotException(Exception):
     """
     Базовый класс исключений для телеграмм-бота с целью отлавливания
