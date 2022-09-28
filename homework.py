@@ -69,7 +69,7 @@ def get_api_answer(current_timestamp: int) -> dict:
             )
         return response.json()
     except requests.exceptions.RequestException as error:
-        raise GetEndpointException(f"Ошибка получения эндпоинта") from error
+        raise GetEndpointException("Ошибка получения эндпоинта") from error
     except json.decoder.JSONDecodeError as error:
         raise Exception(f"Ответ {response.text} получен не в виде JSON: "
                         f"{error}")
