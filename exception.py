@@ -1,20 +1,28 @@
-class HTTPStatusCodeIncorrectException(Exception):
+class UnionClassByTelegramBotException(Exception):
+    """Базовый класс исключений для телеграмм-бота"""
+    pass
+
+
+class HTTPStatusCodeIncorrectException(UnionClassByTelegramBotException):
     """
     Исключение возникает, если страница возвращает статус отличный от 200.
     """
+    pass
 
 
-class GetEndpointException(Exception):
+class GetEndpointException(UnionClassByTelegramBotException):
     """Невозможно получить эндпоинт API."""
+    pass
 
 
-class HWisNotListException(Exception):
-    """Тип получаемого домашнего задания List."""
+class ResponseNotListException(UnionClassByTelegramBotException):
+    """
+    Исключение, вознкиающие при получении ответа от API
+     не в нужном формате List.
+     """
+    pass
 
 
-class KeyDictResponseException(Exception):
+class KeyDictResponseException(UnionClassByTelegramBotException):
     """Исключение, возникающие при отсутствуии нужного ключа в ответе API."""
-
-
-class VariableNotValidException(Exception):
-    """Переменные среды не корректны."""
+    pass
