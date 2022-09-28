@@ -1,13 +1,11 @@
 import json
 import logging
-import os
 import sys
 import requests
 import telegram
 import time as time_
 
 
-from dotenv import load_dotenv
 from http import HTTPStatus
 
 
@@ -16,29 +14,11 @@ from exception import (
     KeyDictResponseException, ResponseNotListException,
     UnionClassByTelegramBotException,
 )
-
-load_dotenv()
-PRACTICUM_TOKEN = os.getenv("PRACTICUM_TOKEN")
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
-
-RETRY_TIME = 600
-ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
-HEADERS = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
-
-HOMEWORK_VERDICTS = {
-    'approved': 'Работа проверена: ревьюеру всё понравилось. Ура!',
-    'reviewing': 'Работа взята на проверку ревьюером.',
-    'rejected': 'Работа проверена: у ревьюера есть замечания.'
-}
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-handler = logging.StreamHandler(sys.stdout)
-logger.addHandler(handler)
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
+from utilites import logger
+from settings import (
+    ENDPOINT, HEADERS, HOMEWORK_VERDICTS, RETRY_TIME,
+    TELEGRAM_TOKEN, TELEGRAM_CHAT_ID, PRACTICUM_TOKEN
+)
 
 
 def send_message(bot: telegram.Bot, message: str) -> None:
@@ -55,13 +35,13 @@ def send_message(bot: telegram.Bot, message: str) -> None:
 def get_api_answer(current_timestamp: int) -> dict:
     """Функция получения ответа API в JSON-формате."""
     timestamp = current_timestamp or int(time_.time())
-    params = {"from_date": timestamp}
+    params = {
+        "url": ENDPOINT,
+        "headers": HEADERS,
+        "params": {"from_date": timestamp}
+    }
     try:
-        response = requests.get(
-            url=ENDPOINT,
-            headers=HEADERS,
-            params=params
-        )
+        response = requests.get(**params)
         if response.status_code != HTTPStatus.OK:
             raise HTTPStatusCodeIncorrectException(
                 f"API эндпоинта недоступна. Ошибка: "
